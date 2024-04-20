@@ -1,13 +1,63 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Downloader</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
 
-<html>
-  <head>
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+        #output {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
 
-  <body>
-    <!-- the entire body must be written by student -->
+        img {
+            max-width: 200px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <button id="download-images-button">Download Images</button>
     <div id="output"></div>
-    <script type="text/javascript" src="./script.js"></script>
-  </body>
+
+    <script>
+        const imageUrls = [
+            { url: "https://picsum.photos/id/237/200/300" },
+            { url: "https://picsum.photos/id/238/200/300" },
+            { url: "https://picsum.photos/id/239/200/300" }
+        ];
+
+        function downloadImage(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.src = url;
+
+                img.onload = () => resolve(img);
+                img.onerror = () => reject(`Failed to load image's URL: ${url}`);
+            });
+        }
+
+        document.getElementById("download-images-button").addEventListener("click", async () => {
+            try {
+                const images = await Promise.all(imageUrls.map(downloadImage));
+                const outputDiv = document.getElementById("output");
+
+                images.forEach((img) => {
+                    outputDiv.appendChild(img);
+                });
+            } catch (error) {
+                console.error(error);
+            }
+        });
+    </script>
+</body>
 </html>
